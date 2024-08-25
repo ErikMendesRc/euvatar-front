@@ -11,9 +11,6 @@ function CharacterUpdate() {
     const iframeRef = useRef(null);
 
     useEffect(() => {
-        // Não precisamos solicitar permissão manualmente,
-        // o navegador cuidará disso automaticamente quando necessário.
-
         const timer = setTimeout(() => {
             setPlaceholderVisible(false); // Esconde o placeholder após 5 segundos
         }, 5000);
@@ -34,7 +31,7 @@ function CharacterUpdate() {
 
         const token = localStorage.getItem('authToken');
 
-        axios.post('http://localhost:8080/api/v1/characters/update', updateData, {
+        axios.post('https://euvatar-api-latest.onrender.com/api/v1/characters/update', updateData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -62,10 +59,10 @@ function CharacterUpdate() {
                 <iframe
                     ref={iframeRef}
                     id="arcane-player-frame"
-                    src="https://embed.arcanemirage.com/f0eacbee-7e7c-4b2d-8908-7a3c67fa593a?key=aWQ9MzQ1NiZrZXk9ZjBlYWNiZWUtN2U3Yy00YjJkLTg5MDgtN2EzYzY3ZmE1OTNhJnRva2VuPQ=="
+                    src="https://embed.arcanemirage.com/f0eacbee-7e7c-4b2d-8908-7a3c67fa593a?key=aWQ9MzQ1NiZrZXk9ZjBlYWNiZWUtN2U3Yy00YjJkLTg5MDgtN2EzYzY3ZmE1OTNhJnRva2VuPXpXb3FUdGgxSTYybA=="
                     frameBorder="0"
-                    width="360px"
-                    height="640px"
+                    width="100%"
+                    height="100%"
                     allow="microphone; fullscreen"
                     style={{ borderRadius: '10px' }}
                 ></iframe>

@@ -15,7 +15,7 @@ function Login() {
         loginData.append('username', username);
         loginData.append('password', password);
 
-        axios.post('http://localhost:8080/api/users/login', loginData, {
+        axios.post('https://euvatar-api-latest.onrender.com/api/users/login', loginData, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
