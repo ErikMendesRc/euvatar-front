@@ -10,82 +10,79 @@ function CharacterUpdate() {
     const [placeholderVisible, setPlaceholderVisible] = useState(true);
     const iframeRef = useRef(null);
     const recognitionRef = useRef(null);
+    const isSpeaking = useRef(false); // Track if the user is currently speaking
 
     useEffect(() => {
-        // Inicializa o reconhecimento de voz em pt-BR
+        // Initialize voice recognition in pt-BR
         if ('webkitSpeechRecognition' in window) {
             const recognition = new window.webkitSpeechRecognition();
-            recognition.lang = 'pt-BR'; // Define o idioma para português do Brasil
-            recognition.continuous = true; // Para continuar escutando
-            recognition.interimResults = true; // Resultados intermediários
+            recognition.lang = 'pt-BR'; // Set language to Portuguese (Brazil)
+            recognition.continuous = true; // Keep listening continuously
+            recognition.interimResults = true; // Get intermediate results
 
             recognition.onstart = () => {
-                console.log('Reconhecimento de voz iniciado.');
+                console.log('Voice recognition started.');
             };
 
             recognition.onresult = (event) => {
                 const transcript = Array.from(event.results)
                     .map(result => result[0].transcript)
                     .join('');
-                
+
+                // If user starts speaking, simulate keydown for "T"
+                if (!isSpeaking.current && transcript.trim().length > 0) {
+                    isSpeaking.current = true;
+                    simulateKeyPress('keydown'); // Press the "T" key
+                    console.log('Speech started, T key pressed.');
+                }
+
+                // When speech ends, simulate keyup for "T"
                 if (event.results[0].isFinal) {
-                    console.log('Transcrição final: ', transcript);
-                    sendKeyPressToIframe('T', 'keyup'); // Simula o soltar da tecla T
-                } else {
-                    console.log('Transcrição intermediária: ', transcript);
-                    sendKeyPressToIframe('T', 'keydown'); // Simula pressionar a tecla T enquanto a pessoa fala
+                    console.log('Final transcript: ', transcript);
+                    simulateKeyPress('keyup'); // Release the "T" key
+                    isSpeaking.current = false;
+                    console.log('Speech ended, T key released.');
                 }
             };
 
             recognition.onend = () => {
-                console.log('Reconhecimento de voz finalizado.');
-                recognition.start(); // Reinicia o reconhecimento de voz ao terminar
+                console.log('Voice recognition ended.');
+                recognition.start(); // Restart voice recognition after it ends
             };
 
             recognitionRef.current = recognition;
-            recognition.start(); // Inicia o reconhecimento de voz
+            recognition.start(); // Start voice recognition
         } else {
-            console.error('O reconhecimento de voz não é suportado neste navegador.');
+            console.error('Voice recognition is not supported in this browser.');
         }
 
         const timer = setTimeout(() => {
-            setPlaceholderVisible(false); // Esconde o placeholder após 8 segundos
+            setPlaceholderVisible(false); // Hide the placeholder after 8 seconds
         }, 8000);
 
         return () => {
-            clearTimeout(timer); // Limpa o timer se o componente for desmontado
+            clearTimeout(timer); // Clear the timer if the component is unmounted
             if (recognitionRef.current) {
-                recognitionRef.current.stop(); // Para o reconhecimento de voz
+                recognitionRef.current.stop(); // Stop voice recognition
             }
         };
     }, []);
 
-    // Função para enviar uma mensagem ao iframe para simular uma tecla pressionada
-    const sendKeyPressToIframe = (key, action) => {
+    // Function to simulate pressing and releasing the "T" key
+    const simulateKeyPress = (action) => {
+        const keyEvent = new KeyboardEvent(action, {
+            key: 'T',
+            keyCode: 84,
+            which: 84,
+            bubbles: true,
+            cancelable: true
+        });
+
         if (iframeRef.current) {
-            iframeRef.current.contentWindow.postMessage({ type: action, key: key }, 'https://embed.arcanemirage.com');
-            console.log(`Mensagem enviada para o iframe: ${action} ${key}`);
+            iframeRef.current.contentWindow.dispatchEvent(keyEvent);
+            console.log(`Simulated ${action} event for "T" key.`);
         }
     };
-
-    // Captura eventos de teclado na página principal e envia ao iframe
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            sendKeyPressToIframe(event.key, 'keydown');
-        };
-
-        const handleKeyUp = (event) => {
-            sendKeyPressToIframe(event.key, 'keyup');
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('keyup', handleKeyUp);
-        };
-    }, []);
 
     const handleUpdate = (e) => {
         e.preventDefault();
@@ -109,15 +106,15 @@ function CharacterUpdate() {
         .then(response => {
             if (response.status === 200) {
                 setSuccessMessage('Character updated successfully!');
-                console.log('Atualização bem-sucedida:', response.data);
+                console.log('Update successful:', response.data);
                 if (iframeRef.current) {
-                    iframeRef.current.src = iframeRef.current.src; // Recarrega o iframe
+                    iframeRef.current.src = iframeRef.current.src; // Reload the iframe
                 }
             }
         })
         .catch(error => {
-            setError('Falha ao atualizar o personagem. Por favor, tente novamente.');
-            console.error('Erro ao atualizar o personagem:', error);
+            setError('Failed to update character. Please try again.');
+            console.error('Error updating character:', error);
         });
     };
 
