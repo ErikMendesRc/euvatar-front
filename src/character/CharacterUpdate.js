@@ -9,14 +9,67 @@ function CharacterUpdate() {
     const [successMessage, setSuccessMessage] = useState('');
     const [placeholderVisible, setPlaceholderVisible] = useState(true);
     const iframeRef = useRef(null);
+    const recognitionRef = useRef(null);
 
     useEffect(() => {
+        // Inicializa o reconhecimento de voz
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new window.webkitSpeechRecognition();
+            recognition.continuous = true; // Para continuar escutando
+            recognition.interimResults = true; // Resultados intermediários
+
+            recognition.onstart = () => {
+                console.log('Voice recognition started.');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0].transcript)
+                    .join('');
+                
+                if (event.results[0].isFinal) {
+                    console.log('Final transcript: ', transcript);
+                    simulateKeyUp('T'); // Simula o soltar da tecla T
+                } else {
+                    console.log('Interim transcript: ', transcript);
+                    simulateKeyDown('T'); // Simula pressionar a tecla T enquanto a pessoa fala
+                }
+            };
+
+            recognition.onend = () => {
+                console.log('Voice recognition ended.');
+                recognition.start(); // Reinicia o reconhecimento de voz ao terminar
+            };
+
+            recognitionRef.current = recognition;
+            recognition.start(); // Inicia o reconhecimento de voz
+        } else {
+            console.error('Speech recognition is not supported in this browser.');
+        }
+
         const timer = setTimeout(() => {
             setPlaceholderVisible(false); // Esconde o placeholder após 5 segundos
         }, 5000);
 
-        return () => clearTimeout(timer); // Limpa o timer se o componente for desmontado
+        return () => {
+            clearTimeout(timer); // Limpa o timer se o componente for desmontado
+            if (recognitionRef.current) {
+                recognitionRef.current.stop(); // Para o reconhecimento de voz
+            }
+        };
     }, []);
+
+    const simulateKeyDown = (key) => {
+        const event = new KeyboardEvent('keydown', { key: key });
+        iframeRef.current.contentWindow.dispatchEvent(event);
+        console.log(`Simulated key down: ${key}`);
+    };
+
+    const simulateKeyUp = (key) => {
+        const event = new KeyboardEvent('keyup', { key: key });
+        iframeRef.current.contentWindow.dispatchEvent(event);
+        console.log(`Simulated key up: ${key}`);
+    };
 
     const handleUpdate = (e) => {
         e.preventDefault();
