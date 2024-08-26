@@ -57,7 +57,7 @@ function CharacterUpdate() {
     return (
         <div style={{ maxWidth: '360px', margin: 'auto', padding: '20px', border: '1px solid #ccc', borderRadius: '10px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
             <h2 style={{ textAlign: 'center', color: '#4CAF50' }}>Atualizar Personagem</h2>
-            <div style={{ position: 'relative', width: '640px', height: '480px', marginBottom: '20px', borderRadius: '10px' }}>
+            <div style={{ position: 'relative', width: '360px', height: '640px', marginBottom: '20px', borderRadius: '10px' }}>
                 <iframe
                     ref={iframeRef}
                     id="arcane-player-frame"
@@ -66,7 +66,7 @@ function CharacterUpdate() {
                     width="100%"
                     height="100%"
                     allow="microphone; fullscreen"
-                    style={{ borderRadius: '10px' }}
+                    style={{ borderRadius: '10px', width: '360px', height: '640px' }}
                 ></iframe>
                 {placeholderVisible && (
                     <div
