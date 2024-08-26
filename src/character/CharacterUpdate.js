@@ -12,14 +12,15 @@ function CharacterUpdate() {
     const recognitionRef = useRef(null);
 
     useEffect(() => {
-        // Inicializa o reconhecimento de voz
+        // Inicializa o reconhecimento de voz em pt-BR
         if ('webkitSpeechRecognition' in window) {
             const recognition = new window.webkitSpeechRecognition();
+            recognition.lang = 'pt-BR'; // Define o idioma para português do Brasil
             recognition.continuous = true; // Para continuar escutando
             recognition.interimResults = true; // Resultados intermediários
 
             recognition.onstart = () => {
-                console.log('Voice recognition started.');
+                console.log('Reconhecimento de voz iniciado.');
             };
 
             recognition.onresult = (event) => {
@@ -28,28 +29,28 @@ function CharacterUpdate() {
                     .join('');
                 
                 if (event.results[0].isFinal) {
-                    console.log('Final transcript: ', transcript);
-                    simulateKeyUp('T'); // Simula o soltar da tecla T
+                    console.log('Transcrição final: ', transcript);
+                    sendKeyPressToIframe('T', 'keyup'); // Simula o soltar da tecla T
                 } else {
-                    console.log('Interim transcript: ', transcript);
-                    simulateKeyDown('T'); // Simula pressionar a tecla T enquanto a pessoa fala
+                    console.log('Transcrição intermediária: ', transcript);
+                    sendKeyPressToIframe('T', 'keydown'); // Simula pressionar a tecla T enquanto a pessoa fala
                 }
             };
 
             recognition.onend = () => {
-                console.log('Voice recognition ended.');
+                console.log('Reconhecimento de voz finalizado.');
                 recognition.start(); // Reinicia o reconhecimento de voz ao terminar
             };
 
             recognitionRef.current = recognition;
             recognition.start(); // Inicia o reconhecimento de voz
         } else {
-            console.error('Speech recognition is not supported in this browser.');
+            console.error('O reconhecimento de voz não é suportado neste navegador.');
         }
 
         const timer = setTimeout(() => {
             setPlaceholderVisible(false); // Esconde o placeholder após 5 segundos
-        }, 5000);
+        }, 8000);
 
         return () => {
             clearTimeout(timer); // Limpa o timer se o componente for desmontado
@@ -59,16 +60,12 @@ function CharacterUpdate() {
         };
     }, []);
 
-    const simulateKeyDown = (key) => {
-        const event = new KeyboardEvent('keydown', { key: key });
-        iframeRef.current.contentWindow.dispatchEvent(event);
-        console.log(`Simulated key down: ${key}`);
-    };
-
-    const simulateKeyUp = (key) => {
-        const event = new KeyboardEvent('keyup', { key: key });
-        iframeRef.current.contentWindow.dispatchEvent(event);
-        console.log(`Simulated key up: ${key}`);
+    // Função para enviar uma mensagem ao iframe para simular uma tecla pressionada
+    const sendKeyPressToIframe = (key, action) => {
+        if (iframeRef.current) {
+            iframeRef.current.contentWindow.postMessage({ type: action, key: key }, 'https://app.euvatar.ai');
+            console.log(`Mensagem enviada para o iframe: ${action} ${key}`);
+        }
     };
 
     const handleUpdate = (e) => {
@@ -93,15 +90,15 @@ function CharacterUpdate() {
         .then(response => {
             if (response.status === 200) {
                 setSuccessMessage('Character updated successfully!');
-                console.log('Update successful:', response.data);
+                console.log('Atualização bem-sucedida:', response.data);
                 if (iframeRef.current) {
                     iframeRef.current.src = iframeRef.current.src; // Recarrega o iframe
                 }
             }
         })
         .catch(error => {
-            setError('Failed to update character. Please try again.');
-            console.error('Error updating character:', error);
+            setError('Falha ao atualizar o personagem. Por favor, tente novamente.');
+            console.error('Erro ao atualizar o personagem:', error);
         });
     };
 
