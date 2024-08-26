@@ -9,73 +9,30 @@ function CharacterUpdate() {
     const [successMessage, setSuccessMessage] = useState('');
     const [placeholderVisible, setPlaceholderVisible] = useState(true);
     const iframeRef = useRef(null);
-    const recognitionRef = useRef(null);
-    const isSpeaking = useRef(false); // Rastrea se o usuário está falando
 
     useEffect(() => {
-        // Inicializa o reconhecimento de voz em pt-BR
-        if ('webkitSpeechRecognition' in window) {
-            const recognition = new window.webkitSpeechRecognition();
-            recognition.lang = 'pt-BR'; // Define o idioma para português do Brasil
-            recognition.continuous = true; // Mantém a escuta contínua
-            recognition.interimResults = true; // Obter resultados intermediários
-
-            recognition.onstart = () => {
-                console.log('Reconhecimento de voz iniciado.');
-            };
-
-            recognition.onresult = (event) => {
-                const transcript = Array.from(event.results)
-                    .map(result => result[0].transcript)
-                    .join('');
-
-                // Se o usuário começa a falar, simula o keydown para "T"
-                if (!isSpeaking.current && transcript.trim().length > 0) {
-                    isSpeaking.current = true;
-                    sendKeyPressToIframe('T', 'keydown'); // Pressiona a tecla "T"
-                    console.log('Fala detectada, tecla T pressionada.');
-                }
-
-                // Quando a fala termina, simula o keyup para "T"
-                if (event.results[0].isFinal) {
-                    console.log('Transcrição final: ', transcript);
-                    sendKeyPressToIframe('T', 'keyup'); // Solta a tecla "T"
-                    isSpeaking.current = false;
-                    console.log('Fala encerrada, tecla T liberada.');
-                }
-            };
-
-            recognition.onend = () => {
-                console.log('Reconhecimento de voz finalizado.');
-                recognition.start(); // Reinicia o reconhecimento de voz ao terminar
-            };
-
-            recognitionRef.current = recognition;
-            recognition.start(); // Inicia o reconhecimento de voz
-        } else {
-            console.error('O reconhecimento de voz não é suportado neste navegador.');
-        }
-
         const timer = setTimeout(() => {
             setPlaceholderVisible(false); // Esconde o placeholder após 8 segundos
         }, 8000);
 
         return () => {
             clearTimeout(timer); // Limpa o timer se o componente for desmontado
-            if (recognitionRef.current) {
-                recognitionRef.current.stop(); // Para o reconhecimento de voz
-            }
         };
     }, []);
 
-    // Função para enviar uma mensagem ao iframe para simular uma tecla pressionada
-    const sendKeyPressToIframe = (key, action) => {
+    // Função para simular o pressionamento da tecla "T"
+    const simulateKeyPress = (action) => {
+        const keyEvent = new KeyboardEvent(action, {
+            key: 'T',
+            keyCode: 84,
+            which: 84,
+            bubbles: true,
+            cancelable: true
+        });
+
         if (iframeRef.current) {
-            iframeRef.current.contentWindow.postMessage(
-                { type: action, key: key }, 
-                'https://app.euvatar.ai/update-character' // Certifique-se de que esta URL corresponde à origem do iframe
-            );
-            console.log(`Mensagem enviada para o iframe: ${action} ${key}`);
+            iframeRef.current.contentWindow.dispatchEvent(keyEvent);
+            console.log(`Simulando ${action} para a tecla "T".`);
         }
     };
 
@@ -143,6 +100,24 @@ function CharacterUpdate() {
                     ></div>
                 )}
             </div>
+
+            <button
+                onMouseDown={() => simulateKeyPress('keydown')}
+                onMouseUp={() => simulateKeyPress('keyup')}
+                style={{
+                    width: '100%',
+                    padding: '12px',
+                    backgroundColor: '#4CAF50',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    fontWeight: 'bold',
+                    marginBottom: '20px',
+                    cursor: 'pointer'
+                }}
+            >
+                Pressione para Falar
+            </button>
 
             <form onSubmit={handleUpdate} style={{ marginTop: '20px' }}>
                 <div style={{ marginBottom: '15px' }}>
