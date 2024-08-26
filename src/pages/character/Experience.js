@@ -22,9 +22,13 @@ function Experience() {
                 <iframe
                     ref={iframeRef}
                     id="arcane-player-frame"
-                    src="https://embed.arcanemirage.com/49e0ebd8-adea-45f3-a398-0f03cb9db8f8?key=aWQ9MzQ1OCZrZXk9NDllMGViZDgtYWRlYS00NWYzLWEzOTgtMGYwM2NiOWRiOGY4JnRva2VuPXdDY3YzdTB4djZZZg=="
+                    src="https://embed.arcanemirage.com/b47cb3d7-9ee8-4964-81da-3ff93ec455fc?key=aWQ9MzQ3NSZrZXk9YjQ3Y2IzZDctOWVlOC00OTY0LTgxZGEtM2ZmOTNlYzQ1NWZjJnRva2VuPUdpa1RzQ2dvOVo2UQ=="
                     frameBorder="0"
-                    allow="microphone; fullscreen"
+                    width="640px"
+                    height="480px"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    allow="fullscreen; microphone"
                     className="experience-iframe"
                 ></iframe>
                 {placeholderVisible && <div className="iframe-placeholder"></div>}

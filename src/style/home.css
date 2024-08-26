@@ -4,7 +4,7 @@ body, html {
   padding: 0;
   box-sizing: border-box;
   font-family: 'Arial', sans-serif;
-  background-color: #000; /* Fundo preto */
+  background-color: #333333; /* Fundo preto */
   color: #fff;
   height: 100%;
   display: flex;
