@@ -10,18 +10,18 @@ function CharacterUpdate() {
     const [placeholderVisible, setPlaceholderVisible] = useState(true);
     const iframeRef = useRef(null);
     const recognitionRef = useRef(null);
-    const isSpeaking = useRef(false); // Track if the user is currently speaking
+    const isSpeaking = useRef(false); // Rastrea se o usuário está falando
 
     useEffect(() => {
-        // Initialize voice recognition in pt-BR
+        // Inicializa o reconhecimento de voz em pt-BR
         if ('webkitSpeechRecognition' in window) {
             const recognition = new window.webkitSpeechRecognition();
-            recognition.lang = 'pt-BR'; // Set language to Portuguese (Brazil)
-            recognition.continuous = true; // Keep listening continuously
-            recognition.interimResults = true; // Get intermediate results
+            recognition.lang = 'pt-BR'; // Define o idioma para português do Brasil
+            recognition.continuous = true; // Mantém a escuta contínua
+            recognition.interimResults = true; // Obter resultados intermediários
 
             recognition.onstart = () => {
-                console.log('Voice recognition started.');
+                console.log('Reconhecimento de voz iniciado.');
             };
 
             recognition.onresult = (event) => {
@@ -29,58 +29,53 @@ function CharacterUpdate() {
                     .map(result => result[0].transcript)
                     .join('');
 
-                // If user starts speaking, simulate keydown for "T"
+                // Se o usuário começa a falar, simula o keydown para "T"
                 if (!isSpeaking.current && transcript.trim().length > 0) {
                     isSpeaking.current = true;
-                    simulateKeyPress('keydown'); // Press the "T" key
-                    console.log('Speech started, T key pressed.');
+                    sendKeyPressToIframe('T', 'keydown'); // Pressiona a tecla "T"
+                    console.log('Fala detectada, tecla T pressionada.');
                 }
 
-                // When speech ends, simulate keyup for "T"
+                // Quando a fala termina, simula o keyup para "T"
                 if (event.results[0].isFinal) {
-                    console.log('Final transcript: ', transcript);
-                    simulateKeyPress('keyup'); // Release the "T" key
+                    console.log('Transcrição final: ', transcript);
+                    sendKeyPressToIframe('T', 'keyup'); // Solta a tecla "T"
                     isSpeaking.current = false;
-                    console.log('Speech ended, T key released.');
+                    console.log('Fala encerrada, tecla T liberada.');
                 }
             };
 
             recognition.onend = () => {
-                console.log('Voice recognition ended.');
-                recognition.start(); // Restart voice recognition after it ends
+                console.log('Reconhecimento de voz finalizado.');
+                recognition.start(); // Reinicia o reconhecimento de voz ao terminar
             };
 
             recognitionRef.current = recognition;
-            recognition.start(); // Start voice recognition
+            recognition.start(); // Inicia o reconhecimento de voz
         } else {
-            console.error('Voice recognition is not supported in this browser.');
+            console.error('O reconhecimento de voz não é suportado neste navegador.');
         }
 
         const timer = setTimeout(() => {
-            setPlaceholderVisible(false); // Hide the placeholder after 8 seconds
+            setPlaceholderVisible(false); // Esconde o placeholder após 8 segundos
         }, 8000);
 
         return () => {
-            clearTimeout(timer); // Clear the timer if the component is unmounted
+            clearTimeout(timer); // Limpa o timer se o componente for desmontado
             if (recognitionRef.current) {
-                recognitionRef.current.stop(); // Stop voice recognition
+                recognitionRef.current.stop(); // Para o reconhecimento de voz
             }
         };
     }, []);
 
-    // Function to simulate pressing and releasing the "T" key
-    const simulateKeyPress = (action) => {
-        const keyEvent = new KeyboardEvent(action, {
-            key: 'T',
-            keyCode: 84,
-            which: 84,
-            bubbles: true,
-            cancelable: true
-        });
-
+    // Função para enviar uma mensagem ao iframe para simular uma tecla pressionada
+    const sendKeyPressToIframe = (key, action) => {
         if (iframeRef.current) {
-            iframeRef.current.contentWindow.dispatchEvent(keyEvent);
-            console.log(`Simulated ${action} event for "T" key.`);
+            iframeRef.current.contentWindow.postMessage(
+                { type: action, key: key }, 
+                'https://embed.arcanemirage.com' // Certifique-se de que esta URL corresponde à origem do iframe
+            );
+            console.log(`Mensagem enviada para o iframe: ${action} ${key}`);
         }
     };
 
@@ -105,22 +100,22 @@ function CharacterUpdate() {
         })
         .then(response => {
             if (response.status === 200) {
-                setSuccessMessage('Character updated successfully!');
-                console.log('Update successful:', response.data);
+                setSuccessMessage('Personagem atualizado com sucesso!');
+                console.log('Atualização bem-sucedida:', response.data);
                 if (iframeRef.current) {
-                    iframeRef.current.src = iframeRef.current.src; // Reload the iframe
+                    iframeRef.current.src = iframeRef.current.src; // Recarrega o iframe
                 }
             }
         })
         .catch(error => {
-            setError('Failed to update character. Please try again.');
-            console.error('Error updating character:', error);
+            setError('Falha ao atualizar o personagem. Por favor, tente novamente.');
+            console.error('Erro ao atualizar o personagem:', error);
         });
     };
 
     return (
         <div style={{ maxWidth: '360px', margin: 'auto', padding: '20px', border: '1px solid #ccc', borderRadius: '10px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
-            <h2 style={{ textAlign: 'center', color: '#4CAF50' }}>Update Character</h2>
+            <h2 style={{ textAlign: 'center', color: '#4CAF50' }}>Atualizar Personagem</h2>
             <div style={{ position: 'relative', width: '360px', height: '640px', marginBottom: '20px', borderRadius: '10px' }}>
                 <iframe
                     ref={iframeRef}
@@ -151,39 +146,39 @@ function CharacterUpdate() {
 
             <form onSubmit={handleUpdate} style={{ marginTop: '20px' }}>
                 <div style={{ marginBottom: '15px' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Character ID:</label>
+                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>ID do Personagem:</label>
                     <input
                         type="text"
                         value={charID}
                         onChange={(e) => setCharID(e.target.value)}
                         required
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                        placeholder="Enter Character ID"
+                        placeholder="Insira o ID do Personagem"
                     />
                 </div>
                 <div style={{ marginBottom: '15px' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Character Name:</label>
+                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Nome do Personagem:</label>
                     <input
                         type="text"
                         value={charName}
                         onChange={(e) => setCharName(e.target.value)}
                         required
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                        placeholder="Enter Character Name"
+                        placeholder="Insira o Nome do Personagem"
                     />
                 </div>
                 <div style={{ marginBottom: '15px' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Backstory:</label>
+                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>História:</label>
                     <textarea
                         value={backstory}
                         onChange={(e) => setBackstory(e.target.value)}
                         required
                         style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc', minHeight: '100px' }}
-                        placeholder="Enter Backstory"
+                        placeholder="Insira a História"
                     ></textarea>
                 </div>
                 <button type="submit" style={{ width: '100%', padding: '12px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold' }}>
-                    Update Character
+                    Atualizar Personagem
                 </button>
             </form>
 
