@@ -1,0 +1,86 @@
+/* experience.css */
+
+.experience-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    background-color: #000;
+}
+
+.euvatar-logo-experience {
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.iframe-container {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    aspect-ratio: 9 / 16;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.experience-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+}
+
+.iframe-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/public/euvatar2.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+.loading-text {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #fff; /* Texto branco */
+    text-align: center;
+    opacity: 0.8;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .euvatar-logo-experience {
+        width: 70%;
+        max-width: 200px;
+    }
+
+    .iframe-container {
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .euvatar-logo-experience {
+        width: 60%;
+        max-width: 150px;
+    }
+
+    .iframe-container {
+        max-width: 250px;
+    }
+
+    .loading-text {
+        font-size: 14px;
+    }
+}

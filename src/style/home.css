@@ -1,0 +1,125 @@
+/* Estilos gerais da aplicação */
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+  background-color: #000; /* Fundo preto */
+  color: #fff;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  transition: all 0.5s ease;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.logo {
+  width: 250px; /* Aumenta o tamanho da logo */
+  height: 250px; /* Aumenta o tamanho da logo */
+  transition: all 0.5s ease;
+}
+
+.blinking {
+  animation: blinking 1.5s infinite;
+}
+
+@keyframes blinking {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.text-container {
+  text-align: center;
+}
+
+.logo.small {
+  width: 150px; /* Aumenta o tamanho da logo pequena */
+  height: 150px; /* Aumenta o tamanho da logo pequena */
+  margin-bottom: 20px;
+  transition: all 0.5s ease;
+}
+
+h1 {
+  font-size: 24px;
+  color: #fff;
+  margin: 20px 0;
+}
+
+.einstein-image {
+  width: 300px; /* Aumenta o tamanho da imagem do Einstein */
+  height: auto;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: transform 0.3s ease;
+}
+
+.einstein-image:hover {
+  transform: scale(1.1);
+}
+
+/* Responsividade */
+@media only screen and (max-width: 768px) {
+  .logo {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .logo.small {
+    width: 120px;
+    height: 120px;
+  }
+
+  .einstein-image {
+    width: 250px; /* Ajuste para telas menores */
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .logo {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .logo.small {
+    width: 100px;
+    height: 100px;
+  }
+
+  .einstein-image {
+    width: 200px; /* Ajuste para telas menores */
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+}

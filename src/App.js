@@ -1,15 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './login/Login'; // Caminho para Login.js
-import CharacterUpdate from './character/CharacterUpdate'; // Caminho para CharacterUpdate.js
+import Home from './pages/home/Home';
+import Login from './pages/login/Login';
+import CharacterUpdate from './pages/character/Experience';
+import Experience from './pages/character/Experience';
 
 function App() {
     return (
         <Router>
             <div className="App">
                 <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="/personagem/einstein" element={<CharacterUpdate />} />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/personagem/einstein" element={<Experience />} />
                 </Routes>
             </div>
         </Router>
