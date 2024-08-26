@@ -77,7 +77,7 @@ function CharacterUpdate() {
                 <iframe
                     ref={iframeRef}
                     id="arcane-player-frame"
-                    src="https://embed.arcanemirage.com/f0eacbee-7e7c-4b2d-8908-7a3c67fa593a?key=aWQ9MzQ1NiZrZXk9ZjBlYWNiZWUtN2U3Yy00YjJkLTg5MDgtN2EzYzY3ZmE1OTNhJnRva2VuPXpXb3FUdGgxSTYybA=="
+                    src="https://embed.arcanemirage.com/49e0ebd8-adea-45f3-a398-0f03cb9db8f8?key=aWQ9MzQ1OCZrZXk9NDllMGViZDgtYWRlYS00NWYzLWEzOTgtMGYwM2NiOWRiOGY4JnRva2VuPXdDY3YzdTB4djZZZg=="
                     frameBorder="0"
                     width="100%"
                     height="100%"
