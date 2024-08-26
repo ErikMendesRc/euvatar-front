@@ -24,8 +24,6 @@ function Experience() {
                     id="arcane-player-frame"
                     src="https://embed.arcanemirage.com/b47cb3d7-9ee8-4964-81da-3ff93ec455fc?key=aWQ9MzQ3NSZrZXk9YjQ3Y2IzZDctOWVlOC00OTY0LTgxZGEtM2ZmOTNlYzQ1NWZjJnRva2VuPUdpa1RzQ2dvOVo2UQ=="
                     frameBorder="0"
-                    width="640px"
-                    height="480px"
                     mozallowfullscreen="true"
                     webkitallowfullscreen="true"
                     allow="fullscreen; microphone"
