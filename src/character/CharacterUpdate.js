@@ -73,7 +73,7 @@ function CharacterUpdate() {
         if (iframeRef.current) {
             iframeRef.current.contentWindow.postMessage(
                 { type: action, key: key }, 
-                'https://embed.arcanemirage.com' // Certifique-se de que esta URL corresponde à origem do iframe
+                'https://app.euvatar.ai/update-character' // Certifique-se de que esta URL corresponde à origem do iframe
             );
             console.log(`Mensagem enviada para o iframe: ${action} ${key}`);
         }
