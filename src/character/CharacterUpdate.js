@@ -63,7 +63,7 @@ function CharacterUpdate() {
     // Função para enviar uma mensagem ao iframe para simular uma tecla pressionada
     const sendKeyPressToIframe = (key, action) => {
         if (iframeRef.current) {
-            iframeRef.current.contentWindow.postMessage({ type: action, key: key }, 'https://app.euvatar.ai');
+            iframeRef.current.contentWindow.postMessage({ type: action, key: key }, 'https://embed.arcanemirage.com');
             console.log(`Mensagem enviada para o iframe: ${action} ${key}`);
         }
     };
