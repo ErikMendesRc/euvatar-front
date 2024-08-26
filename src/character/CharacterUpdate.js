@@ -49,7 +49,7 @@ function CharacterUpdate() {
         }
 
         const timer = setTimeout(() => {
-            setPlaceholderVisible(false); // Esconde o placeholder após 5 segundos
+            setPlaceholderVisible(false); // Esconde o placeholder após 8 segundos
         }, 8000);
 
         return () => {
@@ -67,6 +67,25 @@ function CharacterUpdate() {
             console.log(`Mensagem enviada para o iframe: ${action} ${key}`);
         }
     };
+
+    // Captura eventos de teclado na página principal e envia ao iframe
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            sendKeyPressToIframe(event.key, 'keydown');
+        };
+
+        const handleKeyUp = (event) => {
+            sendKeyPressToIframe(event.key, 'keyup');
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
+    }, []);
 
     const handleUpdate = (e) => {
         e.preventDefault();
