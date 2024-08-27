@@ -1,4 +1,4 @@
-/* Estilos gerais da aplicação */
+/* Geral */
 body, html {
   margin: 0;
   padding: 0;
@@ -30,8 +30,8 @@ body, html {
 }
 
 .logo {
-  width: 250px; /* Aumenta o tamanho da logo */
-  height: 250px; /* Aumenta o tamanho da logo */
+  width: 250px;
+  height: 250px;
   transition: all 0.5s ease;
 }
 
@@ -59,27 +59,33 @@ body, html {
 }
 
 .logo.small {
-  width: 150px; /* Aumenta o tamanho da logo pequena */
-  height: 150px; /* Aumenta o tamanho da logo pequena */
+  width: 150px;
+  height: 150px;
   margin-bottom: 20px;
   transition: all 0.5s ease;
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 28px; /* Aumentei o tamanho da fonte para destaque */
   color: #fff;
   margin: 20px 0;
 }
 
-.einstein-image {
-  width: 300px; /* Aumenta o tamanho da imagem do Einstein */
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Aumentei o espaçamento entre as imagens */
+  margin-top: 20px;
+}
+
+.avatar-image {
+  width: 300px; /* Tamanho maior para as imagens */
   height: auto;
   cursor: pointer;
-  margin-top: 20px;
   transition: transform 0.3s ease;
 }
 
-.einstein-image:hover {
+.avatar-image:hover {
   transform: scale(1.1);
 }
 
@@ -91,16 +97,16 @@ h1 {
   }
   
   .logo.small {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
   }
 
-  .einstein-image {
-    width: 250px; /* Ajuste para telas menores */
+  .avatar-image {
+    width: 140px; /* Ajuste para telas médias */
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 24px; /* Tamanho ajustado para telas médias */
   }
 }
 
@@ -115,11 +121,11 @@ h1 {
     height: 100px;
   }
 
-  .einstein-image {
-    width: 200px; /* Ajuste para telas menores */
+  .avatar-image {
+    width: 120px; /* Ajuste para telas pequenas */
   }
 
   h1 {
-    font-size: 18px;
+    font-size: 20px; /* Tamanho ajustado para telas pequenas */
   }
 }

@@ -14,8 +14,8 @@ function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleClick = () => {
-    navigate('/personagem/einstein');
+  const handleClick = (character) => {
+    navigate(`/personagem/${character}`);
   };
 
   return (
@@ -28,13 +28,27 @@ function Home() {
         <div className="content">
           <img src="/logo.png" className="logo small" alt="Logo" />
           <div className="text-container">
-            <h1>Converse agora com Albert Einstein</h1>
-            <img
-              src="/einstein-bg.png"
-              alt="Albert Einstein"
-              className="einstein-image"
-              onClick={handleClick}
-            />
+            <h1>Converse com nossos Euvatares</h1>
+            <div className="avatar-container">
+              <img
+                src="/einstein-bg.png"
+                alt="Albert Einstein"
+                className="avatar-image"
+                onClick={() => handleClick('einstein')}
+              />
+              <img
+                src="/pele.png"
+                alt="Pelé"
+                className="avatar-image"
+                onClick={() => handleClick('pele')}
+              />
+              <img
+                src="/machado.png"
+                alt="Machado de Assis"
+                className="avatar-image"
+                onClick={() => handleClick('machado')}
+              />
+            </div>
           </div>
         </div>
       )}
