@@ -18,8 +18,9 @@
 
 .iframe-container {
     position: relative;
-    width: 360px; /* Largura fixa */
-    height: 640px; /* Altura fixa */
+    width: 100%;
+    max-width: 360px; /* Largura máxima */
+    aspect-ratio: 9 / 16; /* Mantém a proporção 9:16 */
     margin-bottom: 10px;
     border-radius: 10px;
     overflow: hidden;
@@ -62,8 +63,8 @@
     }
 
     .iframe-container {
-        width: 320px;
-        height: 570px;
+        max-width: 320px; /* Reduz a largura máxima */
+        aspect-ratio: 9 / 16; /* Mantém a proporção 9:16 */
     }
 }
 
@@ -75,18 +76,11 @@
 
     .iframe-container {
         width: 100%; /* Ocupa toda a largura da tela */
-        padding-top: 177.78%; /* Proporção 9:16 */
-        height: 0;
-        position: relative;
+        aspect-ratio: 9 / 16; /* Mantém a proporção 9:16 */
     }
 
     .experience-iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: 10px;
+        height: 100%; /* Garantir que o iframe preencha toda a altura disponível */
     }
 
     .loading-text {
