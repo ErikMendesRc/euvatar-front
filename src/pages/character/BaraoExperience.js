@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../../style/experience.css';
 
-function Experience() {
+function BaraoExperience() {
     const [placeholderVisible, setPlaceholderVisible] = useState(true);
     const iframeRef = useRef(null);
 
@@ -22,8 +22,10 @@ function Experience() {
                 <iframe
                     ref={iframeRef}
                     id="arcane-player-frame"
-                    src="https://embed.arcanemirage.com/40dfb222-339b-401b-b875-ef9250bf6197?key=aWQ9MzQ5MCZrZXk9NDBkZmIyMjItMzM5Yi00MDFiLWI4NzUtZWY5MjUwYmY2MTk3JnRva2VuPWI1TENoLVc2LTdJLQ=="
+                    src="https://embed.arcanemirage.com/dddceb87-1d88-4c3f-8348-71e84be63df4?key=aWQ9MzU4MCZrZXk9ZGRkY2ViODctMWQ4OC00YzNmLTgzNDgtNzFlODRiZTYzZGY0JnRva2VuPTd1Q0szSmdvbW45bA=="
                     frameBorder="0"
+                    width="640px"
+                    height="480px"
                     mozallowfullscreen="true"
                     webkitallowfullscreen="true"
                     allow="fullscreen; microphone"
@@ -38,4 +40,4 @@ function Experience() {
     );
 }
 
-export default Experience;
+export default BaraoExperience;

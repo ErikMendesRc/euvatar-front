@@ -1,43 +1,32 @@
-import { Canvas } from '@react-three/fiber';
-import { Experience } from './components/Experience';
-import { KeyboardControls, Loader } from '@react-three/drei';
-import { useConvaiClient } from './hooks/useConvaiClient';
-import ChatBubble from './components/chat/Chat';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/home/Home';
+import PeleExperience from './pages/character/PeleExperience';
+import MachadoExperience from './pages/character/MachadoExperience';
+import EinsteinExperience from './pages/character/Einstein';
+import BaraoExperience from './pages/character/BaraoExperience';
+import ExperienceCanvas from './pages/character/ExperienceCanva'; // Importar o ExperienceCanvas
+import { useConvaiClient } from './hooks/useConvaiClient'; // Importe o hook para inicializar o cliente
 
 function App() {
-  /**
-   * Add apikey and character id here
-   */
+  // Inicialize o cliente Convai apenas aqui
   const { client } = useConvaiClient('a1bcc176-6257-11ef-8432-42010a7be011', 'cdcf6a41413a5cd4abc3929bfc18173d');
+
+  if (!client) {
+    return <div>Loading client...</div>; // Renderiza uma mensagem de carregamento enquanto o cliente é inicializado
+  }
+
   return (
-    <>
-      <KeyboardControls
-        map={[
-          { name: 'forward', keys: ['ArrowUp', 'w', 'W'] },
-          { name: 'backward', keys: ['ArrowDown', 's', 'S'] },
-          { name: 'left', keys: ['ArrowLeft', 'a', 'A'] },
-          { name: 'right', keys: ['ArrowRight', 'd', 'D'] },
-          { name: 'sprint', keys: ['Shift'] },
-          { name: 'jump', keys: ['Space'] },
-        ]}
-      >
-        <Loader />
-        {/* <Leva /> */}
-        <Canvas
-          shadows
-          camera={{
-            position: [0, 0.8, 3],
-            fov: 75,
-          }}
-        >
-          <Experience client={client} />
-        </Canvas>
-      </KeyboardControls>
-      {/* {
-      client && */}
-      <ChatBubble client={client} />
-      {/* } */}
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/personagem/pele" element={<PeleExperience />} />
+        <Route path="/personagem/machado" element={<MachadoExperience />} />
+        <Route path="/personagem/einstein" element={<EinsteinExperience />} />
+        <Route path="/personagem/barao" element={<BaraoExperience />} />
+        <Route path="/experience-canvas" element={<ExperienceCanvas client={client} />} /> {/* Cliente passado apenas para ExperienceCanvas */}
+      </Routes>
+    </Router>
   );
 }
 

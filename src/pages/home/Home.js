@@ -48,6 +48,12 @@ function Home() {
                 className="avatar-image"
                 onClick={() => handleClick('machado')}
               />
+              <img
+                src="/barao.png"
+                alt="Barão de Mauá"
+                className="avatar-image"
+                onClick={() => handleClick('barao')}
+              />
             </div>
           </div>
         </div>
