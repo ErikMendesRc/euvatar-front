@@ -1,25 +1,44 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/home/Home';
-import Login from './pages/login/Login';
-import Experience from './pages/character/Experience';
-import PeleExperience from './pages/character/PeleExperience';
-import MachadoExperience from './pages/character/MachadoExperience';
+import { Canvas } from '@react-three/fiber';
+import { Experience } from './components/Experience';
+import { KeyboardControls, Loader } from '@react-three/drei';
+import { useConvaiClient } from './hooks/useConvaiClient';
+import ChatBubble from './components/chat/Chat';
 
 function App() {
-    return (
-        <Router>
-            <div className="App">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/personagem/einstein" element={<Experience />} />
-                    <Route path="/personagem/machado" element={<MachadoExperience />} />
-                    <Route path="/personagem/pele" element={<PeleExperience />} />
-                </Routes>
-            </div>
-        </Router>
-    );
+  /**
+   * Add apikey and character id here
+   */
+  const { client } = useConvaiClient('a1bcc176-6257-11ef-8432-42010a7be011', 'cdcf6a41413a5cd4abc3929bfc18173d');
+  return (
+    <>
+      <KeyboardControls
+        map={[
+          { name: 'forward', keys: ['ArrowUp', 'w', 'W'] },
+          { name: 'backward', keys: ['ArrowDown', 's', 'S'] },
+          { name: 'left', keys: ['ArrowLeft', 'a', 'A'] },
+          { name: 'right', keys: ['ArrowRight', 'd', 'D'] },
+          { name: 'sprint', keys: ['Shift'] },
+          { name: 'jump', keys: ['Space'] },
+        ]}
+      >
+        <Loader />
+        {/* <Leva /> */}
+        <Canvas
+          shadows
+          camera={{
+            position: [0, 0.8, 3],
+            fov: 75,
+          }}
+        >
+          <Experience client={client} />
+        </Canvas>
+      </KeyboardControls>
+      {/* {
+      client && */}
+      <ChatBubble client={client} />
+      {/* } */}
+    </>
+  );
 }
 
 export default App;
