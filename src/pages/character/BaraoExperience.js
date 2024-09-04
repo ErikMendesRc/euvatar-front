@@ -22,7 +22,7 @@ function BaraoExperience() {
                 <iframe
                     ref={iframeRef}
                     id="arcane-player-frame"
-                    src="https://embed.arcanemirage.com/dddceb87-1d88-4c3f-8348-71e84be63df4?key=aWQ9MzU4MCZrZXk9ZGRkY2ViODctMWQ4OC00YzNmLTgzNDgtNzFlODRiZTYzZGY0JnRva2VuPTd1Q0szSmdvbW45bA=="
+                    src="https://embed.arcanemirage.com/59009e4c-b353-4ab1-bf21-bf48f82cf86f?key=aWQ9MzU4MyZrZXk9NTkwMDllNGMtYjM1My00YWIxLWJmMjEtYmY0OGY4MmNmODZmJnRva2VuPXh3R3NKakRxcWdKWQ=="
                     frameBorder="0"
                     width="640px"
                     height="480px"
