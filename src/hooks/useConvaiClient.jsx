@@ -1,7 +1,6 @@
 import axios from "axios";
-import { ConvaiClient } from "convai-web-sdk"
+import { ConvaiClient } from "convai-web-sdk";
 import { useEffect, useRef, useState } from "react";
-
 
 export function useConvaiClient(characterId, apiKey) {
   const [userText, setUserText] = useState("");
@@ -13,25 +12,22 @@ export function useConvaiClient(characterId, apiKey) {
   const [avatar, setAvatar] = useState("");
   const [npcName, setNpcName] = useState("Npc");
   const [userName, setUserName] = useState("User");
-  const [facialData, setFacialData] = useState([])
-  const [emotionData, setEmotionData] = useState([])
+  const [facialData, setFacialData] = useState([]);
+  const [emotionData, setEmotionData] = useState([]);
   const [gender, setGender] = useState("MALE");
   const [userEndOfResponse, setUserEndOfResponse] = useState(false);
+  
   // Refs
   const npcTextRef = useRef();
   const convaiClient = useRef(null);
-  const facialRef = useRef([])
-  const finalizedUserText = useRef();
+  const facialRef = useRef([]);
+  const finalizedUserText = useRef("");
 
   //TimeStamps
   let keyPressTime = 100;
   const [keyPressTimeStamp, setKeyPressTimeStamp] = useState();
 
-
-
-
-
-  //Intializing the convai Client
+  // Intializing the convai Client
   useEffect(() => {
     convaiClient.current = new ConvaiClient({
       apiKey: apiKey,
@@ -43,7 +39,7 @@ export function useConvaiClient(characterId, apiKey) {
 
     convaiClient.current.setErrorCallback((type, message) => {
       console.log(type, message);
-    })
+    });
 
     convaiClient.current.setResponseCallback((response) => {
       if (response.hasUserQuery()) {
@@ -65,8 +61,8 @@ export function useConvaiClient(characterId, apiKey) {
           if (audioResponse?.getVisemesData()?.array[0]) {
             let faceData = audioResponse?.getVisemesData().array[0];
             if (faceData[0] !== -2) {
-              facialRef.current.push(faceData)
-              setFacialData(facialRef.current)
+              facialRef.current.push(faceData);
+              setFacialData(facialRef.current);
             }
           }
           npcTextRef.current += " " + audioResponse.getTextData();
@@ -78,7 +74,6 @@ export function useConvaiClient(characterId, apiKey) {
         if (response.getAudioResponse()?.getEndOfResponse()) {
           setUserEndOfResponse(true);
         }
-
       }
     });
 
@@ -126,8 +121,8 @@ export function useConvaiClient(characterId, apiKey) {
     }
   }, [audioPlay]);
 
+  // Handle key press (Desktop)
   function handleKeyPress(e) {
-    //To check whether the user is not inside the the input area
     if (
       document.activeElement.tagName === "INPUT" ||
       document.activeElement.tagName === "TEXTAREA" ||
@@ -139,14 +134,7 @@ export function useConvaiClient(characterId, apiKey) {
     if (convaiClient.current && e.keyCode === 84 && !keyPressed) {
       e.stopPropagation();
       e.preventDefault();
-      setKeyPressed(true);
-      finalizedUserText.current = "";
-      npcTextRef.current = "";
-      setUserText("");
-      setNpcText("");
-      convaiClient.current.startAudioChunk();
-      // Record the timestamp of the key Pressed
-      setKeyPressTimeStamp(Date.now())
+      startAudio();
     }
   }
 
@@ -156,58 +144,69 @@ export function useConvaiClient(characterId, apiKey) {
       document.activeElement.tagName === "TEXTAREA" ||
       document.activeElement.isContentEditable
     ) {
-      // If the user is focused on an input field, return without activating the mic
       return;
     }
     if (convaiClient.current && e.keyCode === 84 && keyPressed) {
       e.preventDefault();
-      const elapsedTime = Date.now() - keyPressTimeStamp;
-      //if elapsedTime less then 100ms
-      if (elapsedTime < keyPressTime) {
-        setTimeout(() => {
-          if (convaiClient.current && keyPressed) {
-            setKeyPressed(false);
-            convaiClient.current.endAudioChunk();
-          }
-        }, keyPressTime)
-      } else {
-        setKeyPressed(false);
-        convaiClient.current.endAudioChunk();
-      }
-
+      stopAudio();
     }
   }
 
-  //Sends user's message to the convai client
-  function sendText() {
-    if (convaiClient.current) {
-      finalizedUserText.current = "";
-      npcTextRef.current = "";
-      setNpcText("");
-      convaiClient.current.sendTextChunk(userText);
-      setEnter(0);
+  // Handle touch events (Mobile)
+  function handleTouchStart() {
+    if (!keyPressed) {
+      startAudio();
     }
   }
 
-  //Handles textBox messages
-  useEffect(() => {
-    if (
-      document.activeElement.tagName === "INPUT" ||
-      document.activeElement.tagName === "TEXTAREA" ||
-      document.activeElement.isContentEditable
-    ) {
-      if (userText !== "" && enter) {
-        sendText();
-      }
+  function handleTouchEnd() {
+    if (keyPressed) {
+      stopAudio();
     }
-  }, [enter]);
+  }
 
+  // Functions to start and stop audio recording
+  function startAudio() {
+    setKeyPressed(true);
+    finalizedUserText.current = "";
+    npcTextRef.current = "";
+    setUserText("");
+    setNpcText("");
+    convaiClient.current.startAudioChunk();
+    setKeyPressTimeStamp(Date.now());
+  }
+
+  function stopAudio() {
+    const elapsedTime = Date.now() - keyPressTimeStamp;
+    if (elapsedTime < keyPressTime) {
+      setTimeout(() => {
+        if (convaiClient.current && keyPressed) {
+          setKeyPressed(false);
+          convaiClient.current.endAudioChunk();
+        }
+      }, keyPressTime);
+    } else {
+      setKeyPressed(false);
+      convaiClient.current.endAudioChunk();
+    }
+  }
+
+  // Effect to handle desktop and mobile events
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-    window.addEventListener("keyup", handleKeyRelease);
+    if (window.innerWidth <= 768) {
+      // Detect mobile devices
+      window.addEventListener("touchstart", handleTouchStart);
+      window.addEventListener("touchend", handleTouchEnd);
+    } else {
+      // Detect desktop events
+      window.addEventListener("keydown", handleKeyPress);
+      window.addEventListener("keyup", handleKeyRelease);
+    }
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
       window.removeEventListener("keyup", handleKeyRelease);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
   }, [keyPressed]);
 
